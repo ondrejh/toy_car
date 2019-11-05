@@ -82,8 +82,8 @@ void setup() {
 void loop() {
   uint32_t now = millis();
 
-  uint8_t blinker_status = 0;
-  uint8_t next_blinker_status = 0;
+  static uint8_t blinker_status = 0;
+  static uint8_t next_blinker_status = 0;
 
   // read and filter buttons and connect actions
   static uint32_t btn_time;
@@ -93,7 +93,7 @@ void loop() {
     if (btn_filter(&buttons[BTNF_LIGHT])) { // LIGHTS ON - OFF
       static bool lights_on = false;
       lights_on = !lights_on;
-      digitalWrite(LIGHTS, lights_on);
+      digitalWrite(LIGHTS, lights_on ? ON : OFF);
     }
     if (btn_filter(&buttons[BTNF_RIGHT])) { // BLINKER RIGHT
       if (blinker_status == 0x1)
@@ -126,8 +126,8 @@ void loop() {
   if ((blinker_status == 0) && (next_blinker_status != 0)) {
     blinker_status = next_blinker_status;
     blinker_on = true;
-    digitalWrite(RIGHT, blinker_status & 1);
-    digitalWrite(LEFT, blinker_status & 2);
+    digitalWrite(RIGHT, (blinker_status & 1) ? ON : OFF);
+    digitalWrite(LEFT, (blinker_status & 2) ? ON : OFF);
     if (!PLAYING) startPlayback(tock_data, tock_length);
     blink_t = now;
   }
@@ -136,8 +136,8 @@ void loop() {
       blink_t += BLINK_PERIOD;
       if (blinker_on) {
         blinker_on = false;
-        digitalWrite(LEFT, 0);
-        digitalWrite(RIGHT, 0);
+        digitalWrite(LEFT, OFF);
+        digitalWrite(RIGHT, OFF);
         if (!PLAYING) startPlayback(tick_data, tick_length);
       }
       else {
@@ -145,8 +145,8 @@ void loop() {
           blinker_status = next_blinker_status;
         if (blinker_status != 0) {
           blinker_on = true;
-          digitalWrite(RIGHT, blinker_status & 1);
-          digitalWrite(LEFT, blinker_status & 2);
+          digitalWrite(RIGHT, (blinker_status & 1) ? ON : OFF);
+          digitalWrite(LEFT, (blinker_status & 2) ? ON : OFF);
           if (!PLAYING) startPlayback(tock_data, tock_length);
         }
       }
