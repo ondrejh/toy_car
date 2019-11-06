@@ -1,8 +1,6 @@
 #include <PCM.h>
 
-#include "tick.h"
-#include "tock.h"
-#include "horn.h"
+#include "sound_data.h"
 
 #define BLINK_PERIOD 350
 
